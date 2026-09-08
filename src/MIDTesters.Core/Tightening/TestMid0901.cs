@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenProtocolInterpreter;
 using OpenProtocolInterpreter.Tightening;
 
-namespace MIDTesters.Core.Tightening
+namespace MIDTesters.Tightening
 {
     [TestClass]
     [TestCategory("Tightening")]

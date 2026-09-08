@@ -44,7 +44,7 @@ namespace OpenProtocolInterpreter.Wifi
 
         protected enum DataFields
         {
-            ReceptionQuality
+            ReceptionQuality = 1
         }
     }
 }

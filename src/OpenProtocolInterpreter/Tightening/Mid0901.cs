@@ -172,9 +172,6 @@ namespace OpenProtocolInterpreter.Tightening
             VariableDataFields = VariableDataField.ParseAll(dataFields.Value).ToList();
         }
 
-        /// <summary>Looks up a data field in the ACTIVE revision's list.</summary>
-        private DataField GetActiveField(DataFields field) => GetField(Header.StandardizedRevision, field);
-
         protected override Dictionary<int, List<DataField>> RegisterDatafields()
         {
             return new Dictionary<int, List<DataField>>()

@@ -91,7 +91,7 @@ namespace OpenProtocolInterpreter.SocketTray
 
         protected enum DataFields
         {
-            Socket1,
+            Socket1 = 1,
             Socket2,
             Socket3,
             Socket4,

@@ -51,7 +51,7 @@ namespace OpenProtocolInterpreter.RexrothJob
 
         protected enum DataFields
         {
-            JobStatus
+            JobStatus = 1
         }
     }
 }

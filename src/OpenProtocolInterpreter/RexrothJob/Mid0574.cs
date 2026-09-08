@@ -47,7 +47,7 @@ namespace OpenProtocolInterpreter.RexrothJob
 
         protected enum DataFields
         {
-            ActionCode
+            ActionCode = 1
         }
     }
 }

@@ -321,6 +321,9 @@ namespace OpenProtocolInterpreter
             return fields.FirstOrDefault(x => x.Field == field) ?? DataField.Default;
         }
 
+        /// <summary>Looks up a data field in the ACTIVE (StandardizedRevision) revision's list.</summary>
+        protected DataField GetActiveField<TEnum>(TEnum field) where TEnum : struct, Enum => GetField(Header.StandardizedRevision, field);
+
         protected DataField<T> GetField<T>(int revision, int field)
         {
             if (!RevisionsByFields.TryGetValue(revision, out var fields))

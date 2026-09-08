@@ -136,12 +136,12 @@ namespace OpenProtocolInterpreter.Hvo
 
         protected enum DataFields
         {
-            Lamp1,
+            Lamp1 = 1,
             Lamp2,
             Lamp3,
             Lamp4,
-            LightNumber,
-            LightStatus
+            LightNumber = 1,
+            LightStatus = 2
         }
     }
 }

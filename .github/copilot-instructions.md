@@ -88,14 +88,13 @@ public class Mid0071 : Mid, IAlarm, IController, IAcknowledgeable<Mid0072>
 
     // --- Constructors (all three required, enforced by tests) ---
     public Mid0071() : this(DEFAULT_REVISION) { }
-    public Mid0071(Header header) : base(header) { HandleRevision(); }
+    public Mid0071(Header header) : base(header) { }
     public Mid0071(int revision) : this(new Header() { Revision = revision, Mid = MID }) { }
 
-    // --- Parse override (only when HandleRevision must run before ProcessDataFields) ---
+    // --- Parse override (only when per-revision processing must run before the standard field loop) ---
     public override Mid Parse(string package)
     {
         Header = ProcessHeader(package);
-        HandleRevision();
         ProcessDataFields(package);
         return this;
     }

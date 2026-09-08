@@ -54,7 +54,7 @@ namespace OpenProtocolInterpreter.RexrothJob
 
         protected enum DataFields
         {
-            JobResultNumber,
+            JobResultNumber = 1,
             JobResultValue
         }
     }

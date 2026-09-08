@@ -60,7 +60,7 @@ namespace OpenProtocolInterpreter.Battery
 
         protected enum DataFields
         {
-            Capacity,
+            Capacity = 1,
             State
         }
     }
