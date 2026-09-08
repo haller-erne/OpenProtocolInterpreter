@@ -24,34 +24,13 @@ namespace OpenProtocolInterpreter.RexrothJob
         /// <para>Job Stop = false (0)</para>
         /// <para>Job Start = true (1)</para>
         /// </summary>
-        public bool JobStart
-        {
-            get => GetField(1, DataFields.JobStart).GetValue(OpenProtocolConvert.ToBoolean);
-            set => GetField(1, DataFields.JobStart).SetValue(OpenProtocolConvert.ToString, value);
-        }
+        [BooleanDataFieldDefinition(revision: 1, field: 1, Index = 20)]
+        public bool JobStart { get; set; }
 
         public Mid0571() : this(DEFAULT_REVISION) { }
 
         public Mid0571(Header header) : base(header) { }
 
         public Mid0571(int revision) : this(new Header() { Mid = MID, Revision = revision }) { }
-
-        protected override Dictionary<int, List<DataField>> RegisterDatafields()
-        {
-            return new Dictionary<int, List<DataField>>()
-            {
-                {
-                    1, new List<DataField>()
-                    {
-                        DataField.Boolean(DataFields.JobStart, 20)
-                    }
-                }
-            };
-        }
-
-        protected enum DataFields
-        {
-            JobStart = 1
-        }
     }
 }

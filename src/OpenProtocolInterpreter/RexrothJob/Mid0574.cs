@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace OpenProtocolInterpreter.RexrothJob
 {
     /// <summary>
@@ -20,34 +18,13 @@ namespace OpenProtocolInterpreter.RexrothJob
         /// <para>02 = Increment job</para>
         /// <para>03 = Decrement job</para>
         /// </summary>
-        public int ActionCode
-        {
-            get => GetField(1, DataFields.ActionCode).GetValue(OpenProtocolConvert.ToInt32);
-            set => GetField(1, DataFields.ActionCode).SetValue(OpenProtocolConvert.ToString, value);
-        }
+        [Int32DataFieldDefinition(revision: 1, field: 1, Index = 20, Size = 2)]
+        public int ActionCode { get; set; }
 
         public Mid0574() : this(DEFAULT_REVISION) { }
 
         public Mid0574(Header header) : base(header) { }
 
         public Mid0574(int revision) : this(new Header() { Mid = MID, Revision = revision }) { }
-
-        protected override Dictionary<int, List<DataField>> RegisterDatafields()
-        {
-            return new Dictionary<int, List<DataField>>()
-            {
-                {
-                    1, new List<DataField>()
-                    {
-                        DataField.Number(DataFields.ActionCode, 20, 2)
-                    }
-                }
-            };
-        }
-
-        protected enum DataFields
-        {
-            ActionCode = 1
-        }
     }
 }

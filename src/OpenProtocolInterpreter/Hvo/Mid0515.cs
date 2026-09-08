@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -22,56 +21,38 @@ namespace OpenProtocolInterpreter.Hvo
         /// <summary>
         /// Revision 1: Lamp 1 signal value (0-9).
         /// </summary>
-        public int Lamp1
-        {
-            get => GetField(1, DataFields.Lamp1).GetValue(OpenProtocolConvert.ToInt32);
-            set => GetField(1, DataFields.Lamp1).SetValue(OpenProtocolConvert.ToString, value);
-        }
+        [Int32DataFieldDefinition(revision: 1, field: 1, Index = 20, Size = 1)]
+        public int Lamp1 { get; set; }
 
         /// <summary>
         /// Revision 1: Lamp 2 signal value (0-9).
         /// </summary>
-        public int Lamp2
-        {
-            get => GetField(1, DataFields.Lamp2).GetValue(OpenProtocolConvert.ToInt32);
-            set => GetField(1, DataFields.Lamp2).SetValue(OpenProtocolConvert.ToString, value);
-        }
+        [Int32DataFieldDefinition(revision: 1, field: 2, Index = 23, Size = 1)]
+        public int Lamp2 { get; set; }
 
         /// <summary>
         /// Revision 1: Lamp 3 signal value (0-9).
         /// </summary>
-        public int Lamp3
-        {
-            get => GetField(1, DataFields.Lamp3).GetValue(OpenProtocolConvert.ToInt32);
-            set => GetField(1, DataFields.Lamp3).SetValue(OpenProtocolConvert.ToString, value);
-        }
+        [Int32DataFieldDefinition(revision: 1, field: 3, Index = 26, Size = 1)]
+        public int Lamp3 { get; set; }
 
         /// <summary>
         /// Revision 1: Lamp 4 signal value (0-9).
         /// </summary>
-        public int Lamp4
-        {
-            get => GetField(1, DataFields.Lamp4).GetValue(OpenProtocolConvert.ToInt32);
-            set => GetField(1, DataFields.Lamp4).SetValue(OpenProtocolConvert.ToString, value);
-        }
+        [Int32DataFieldDefinition(revision: 1, field: 4, Index = 29, Size = 1)]
+        public int Lamp4 { get; set; }
 
         /// <summary>
         /// Revision 2: Light number (1-999).
         /// </summary>
-        public int LightNumber
-        {
-            get => GetField(2, DataFields.LightNumber).GetValue(OpenProtocolConvert.ToInt32);
-            set => GetField(2, DataFields.LightNumber).SetValue(OpenProtocolConvert.ToString, value);
-        }
+        [Int32DataFieldDefinition(revision: 2, field: 1, Index = 20, Size = 3)]
+        public int LightNumber { get; set; }
 
         /// <summary>
         /// Revision 2: Light status value (1-999).
         /// </summary>
-        public int LightStatus
-        {
-            get => GetField(2, DataFields.LightStatus).GetValue(OpenProtocolConvert.ToInt32);
-            set => GetField(2, DataFields.LightStatus).SetValue(OpenProtocolConvert.ToString, value);
-        }
+        [Int32DataFieldDefinition(revision: 2, field: 2, Index = 25, Size = 3)]
+        public int LightStatus { get; set; }
 
         public Mid0515() : this(DEFAULT_REVISION) { }
 
@@ -109,39 +90,6 @@ namespace OpenProtocolInterpreter.Hvo
             var builder = new StringBuilder(Header.ToString());
             builder.Append(Pack(revision));
             return builder.ToString();
-        }
-
-        protected override Dictionary<int, List<DataField>> RegisterDatafields()
-        {
-            return new Dictionary<int, List<DataField>>()
-            {
-                {
-                    1, new List<DataField>()
-                    {
-                        DataField.Number(DataFields.Lamp1, 20, 1),
-                        DataField.Number(DataFields.Lamp2, 23, 1),
-                        DataField.Number(DataFields.Lamp3, 26, 1),
-                        DataField.Number(DataFields.Lamp4, 29, 1)
-                    }
-                },
-                {
-                    2, new List<DataField>()
-                    {
-                        DataField.Number(DataFields.LightNumber, 20, 3),
-                        DataField.Number(DataFields.LightStatus, 25, 3)
-                    }
-                }
-            };
-        }
-
-        protected enum DataFields
-        {
-            Lamp1 = 1,
-            Lamp2,
-            Lamp3,
-            Lamp4,
-            LightNumber = 1,
-            LightStatus = 2
         }
     }
 }

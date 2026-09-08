@@ -23,34 +23,13 @@ namespace OpenProtocolInterpreter.RexrothJob
         /// <summary>
         /// Job number to select (000-999).
         /// </summary>
-        public int JobNumber
-        {
-            get => GetField(1, DataFields.JobNumber).GetValue(OpenProtocolConvert.ToInt32);
-            set => GetField(1, DataFields.JobNumber).SetValue(OpenProtocolConvert.ToString, value);
-        }
+        [Int32DataFieldDefinition(revision: 1, field: 1, Index = 20, Size = 3, HasPrefix = false)]
+        public int JobNumber { get; set; }
 
         public Mid0573() : this(DEFAULT_REVISION) { }
 
         public Mid0573(Header header) : base(header) { }
 
         public Mid0573(int revision) : this(new Header() { Mid = MID, Revision = revision }) { }
-
-        protected override Dictionary<int, List<DataField>> RegisterDatafields()
-        {
-            return new Dictionary<int, List<DataField>>()
-            {
-                {
-                    1, new List<DataField>()
-                    {
-                        DataField.Number(DataFields.JobNumber, 20, 3, false)
-                    }
-                }
-            };
-        }
-
-        protected enum DataFields
-        {
-            JobNumber = 1
-        }
     }
 }

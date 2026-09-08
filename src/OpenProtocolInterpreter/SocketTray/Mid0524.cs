@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace OpenProtocolInterpreter.SocketTray
 {
     /// <summary>
@@ -15,90 +13,34 @@ namespace OpenProtocolInterpreter.SocketTray
     {
         public const int MID = 524;
 
-        public int Socket1
-        {
-            get => GetField(1, DataFields.Socket1).GetValue(OpenProtocolConvert.ToInt32);
-            set => GetField(1, DataFields.Socket1).SetValue(OpenProtocolConvert.ToString, value);
-        }
+        [Int32DataFieldDefinition(revision: 1, field: 1, Index = 20, Size = 1)]
+        public int Socket1 { get; set; }
 
-        public int Socket2
-        {
-            get => GetField(1, DataFields.Socket2).GetValue(OpenProtocolConvert.ToInt32);
-            set => GetField(1, DataFields.Socket2).SetValue(OpenProtocolConvert.ToString, value);
-        }
+        [Int32DataFieldDefinition(revision: 1, field: 2, Index = 23, Size = 1)]
+        public int Socket2 { get; set; }
 
-        public int Socket3
-        {
-            get => GetField(1, DataFields.Socket3).GetValue(OpenProtocolConvert.ToInt32);
-            set => GetField(1, DataFields.Socket3).SetValue(OpenProtocolConvert.ToString, value);
-        }
+        [Int32DataFieldDefinition(revision: 1, field: 3, Index = 26, Size = 1)]
+        public int Socket3 { get; set; }
 
-        public int Socket4
-        {
-            get => GetField(1, DataFields.Socket4).GetValue(OpenProtocolConvert.ToInt32);
-            set => GetField(1, DataFields.Socket4).SetValue(OpenProtocolConvert.ToString, value);
-        }
+        [Int32DataFieldDefinition(revision: 1, field: 4, Index = 29, Size = 1)]
+        public int Socket4 { get; set; }
 
-        public int Socket5
-        {
-            get => GetField(1, DataFields.Socket5).GetValue(OpenProtocolConvert.ToInt32);
-            set => GetField(1, DataFields.Socket5).SetValue(OpenProtocolConvert.ToString, value);
-        }
+        [Int32DataFieldDefinition(revision: 1, field: 5, Index = 32, Size = 1)]
+        public int Socket5 { get; set; }
 
-        public int Socket6
-        {
-            get => GetField(1, DataFields.Socket6).GetValue(OpenProtocolConvert.ToInt32);
-            set => GetField(1, DataFields.Socket6).SetValue(OpenProtocolConvert.ToString, value);
-        }
+        [Int32DataFieldDefinition(revision: 1, field: 6, Index = 35, Size = 1)]
+        public int Socket6 { get; set; }
 
-        public int Socket7
-        {
-            get => GetField(1, DataFields.Socket7).GetValue(OpenProtocolConvert.ToInt32);
-            set => GetField(1, DataFields.Socket7).SetValue(OpenProtocolConvert.ToString, value);
-        }
+        [Int32DataFieldDefinition(revision: 1, field: 7, Index = 38, Size = 1)]
+        public int Socket7 { get; set; }
 
-        public int Socket8
-        {
-            get => GetField(1, DataFields.Socket8).GetValue(OpenProtocolConvert.ToInt32);
-            set => GetField(1, DataFields.Socket8).SetValue(OpenProtocolConvert.ToString, value);
-        }
+        [Int32DataFieldDefinition(revision: 1, field: 8, Index = 41, Size = 1)]
+        public int Socket8 { get; set; }
 
         public Mid0524() : this(DEFAULT_REVISION) { }
 
         public Mid0524(Header header) : base(header) { }
 
         public Mid0524(int revision) : this(new Header() { Mid = MID, Revision = revision }) { }
-
-        protected override Dictionary<int, List<DataField>> RegisterDatafields()
-        {
-            return new Dictionary<int, List<DataField>>()
-            {
-                {
-                    1, new List<DataField>()
-                    {
-                        DataField.Number(DataFields.Socket1, 20, 1),
-                        DataField.Number(DataFields.Socket2, 23, 1),
-                        DataField.Number(DataFields.Socket3, 26, 1),
-                        DataField.Number(DataFields.Socket4, 29, 1),
-                        DataField.Number(DataFields.Socket5, 32, 1),
-                        DataField.Number(DataFields.Socket6, 35, 1),
-                        DataField.Number(DataFields.Socket7, 38, 1),
-                        DataField.Number(DataFields.Socket8, 41, 1)
-                    }
-                }
-            };
-        }
-
-        protected enum DataFields
-        {
-            Socket1 = 1,
-            Socket2,
-            Socket3,
-            Socket4,
-            Socket5,
-            Socket6,
-            Socket7,
-            Socket8
-        }
     }
 }

@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace OpenProtocolInterpreter.AutomaticManualMode
 {
     /// <summary>
@@ -20,11 +18,8 @@ namespace OpenProtocolInterpreter.AutomaticManualMode
         /// <para>Automatic Mode = false (0)</para>
         /// <para>Manual Mode = true (1)</para>
         /// </summary>
-        public bool ManualAutomaticMode
-        {
-            get => GetField(1, DataFields.ManualAutomaticMode).GetValue(OpenProtocolConvert.ToBoolean);
-            set => GetField(1, DataFields.ManualAutomaticMode).SetValue(OpenProtocolConvert.ToString, value);
-        }
+        [BooleanDataFieldDefinition(revision: 1, field: 1, Index = 20, HasPrefix = false)]
+        public bool ManualAutomaticMode { get; set; }
 
         public Mid0404() : this(DEFAULT_REVISION) { }
 
@@ -34,24 +29,6 @@ namespace OpenProtocolInterpreter.AutomaticManualMode
 
         public Mid0404(int revision) : this(new Header() { Mid = MID, Revision = revision })
         {
-        }
-
-        protected override Dictionary<int, List<DataField>> RegisterDatafields()
-        {
-            return new Dictionary<int, List<DataField>>()
-            {
-                {
-                    1, new List<DataField>()
-                    {
-                        DataField.Boolean(DataFields.ManualAutomaticMode, 20, false)
-                    }
-                }
-            };
-        }
-
-        protected enum DataFields
-        {
-            ManualAutomaticMode
         }
     }
 }

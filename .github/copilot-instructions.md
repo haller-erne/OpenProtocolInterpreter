@@ -48,8 +48,7 @@ docs/                        ← vendor protocol specs (Atlas Copco, Desoutter)
 | 19 | MessageNumber | 1 |
 
 ### DataField
-Describes one field within a MID. Key members: `Field` (enum hash), `Index` (absolute offset from byte 0), `Size`, `HasPrefix`, `Value`.  
-Use factory statics — **never call the constructor directly**:
+Describes one field within a MID. In the attribute-based pattern, fields are declared via `[XxxDataFieldDefinition]` attributes on properties (see MID Class Conventions below). The attribute system handles binding, parsing, and packing automatically. For MIDs that override `RegisterDatafields()` (rare — only when the attribute pattern cannot express the layout), use `DataField` factory statics:
 - `DataField.String(field, index, size)` — space-padded
 - `DataField.Number(field, index, size)` — zero-padded
 - `DataField.Boolean(field, index)` — size 1
@@ -64,7 +63,7 @@ Key pairs: `ToBoolean`/`ToString(bool)`, `ToDateTime`/`ToString(DateTime)`, `ToD
 
 ## MID Class Conventions (mandatory)
 
-Every concrete MID **must** follow this exact pattern:
+Every concrete MID **must** follow this exact pattern (attribute-based, upstream v6.2.0+):
 
 ```csharp
 // Namespace: OpenProtocolInterpreter.{Category}
@@ -72,69 +71,62 @@ public class Mid0071 : Mid, IAlarm, IController, IAcknowledgeable<Mid0072>
 {
     public const int MID = 71; // always present
 
-    // --- Properties ---
-    // Simple string / bool
-    public string ErrorCode
-    {
-        get => GetField(1, DataFields.ErrorCode).Value;
-        set => GetField(1, DataFields.ErrorCode).SetValue(value);
-    }
-    // Typed (non-string) — use OpenProtocolConvert
-    public bool ControllerReadyStatus
-    {
-        get => GetField(1, DataFields.ControllerReadyStatus).GetValue(OpenProtocolConvert.ToBoolean);
-        set => GetField(1, DataFields.ControllerReadyStatus).SetValue(OpenProtocolConvert.ToString, value);
-    }
+    // --- Properties decorated with DataFieldDefinition attributes ---
+    [StringDataFieldDefinition(revision: 1, field: 1, Index = 20, Size = 4, PaddingOrientation = PaddingOrientation.LeftPadded)]
+    [StringDataFieldDefinition(revision: 2, field: 1, Index = 20, Size = 5, PaddingOrientation = PaddingOrientation.LeftPadded)]
+    [StringDataFieldDefinition(revision: 3, field: 1, Index = 20, Size = 5, PaddingOrientation = PaddingOrientation.LeftPadded)]
+    public string ErrorCode { get; set; }
+
+    [BooleanDataFieldDefinition(revision: 1, field: 2, Index = 26)]
+    [BooleanDataFieldDefinition(revision: 2, field: 2, Index = 27)]
+    [BooleanDataFieldDefinition(revision: 3, field: 2, Index = 27)]
+    public bool ControllerReadyStatus { get; set; }
+
+    [TimestampDataFieldDefinition(revision: 1, field: 4, Index = 32)]
+    [TimestampDataFieldDefinition(revision: 2, field: 4, Index = 33)]
+    [TimestampDataFieldDefinition(revision: 3, field: 4, Index = 33)]
+    public DateTime Time { get; set; }
 
     // --- Constructors (all three required, enforced by tests) ---
     public Mid0071() : this(DEFAULT_REVISION) { }
     public Mid0071(Header header) : base(header) { }
     public Mid0071(int revision) : this(new Header() { Revision = revision, Mid = MID }) { }
 
-    // --- Parse override (only when per-revision processing must run before the standard field loop) ---
-    public override Mid Parse(string package)
-    {
-        Header = ProcessHeader(package);
-        ProcessDataFields(package);
-        return this;
-    }
-
-    // --- Field declarations per revision ---
-    protected override Dictionary<int, List<DataField>> RegisterDatafields()
-    {
-        return new Dictionary<int, List<DataField>>()
-        {
-            {
-                1, new List<DataField>()
-                {
-                    DataField.String(DataFields.ErrorCode, 20, 4, PaddingOrientation.LeftPadded),
-                    DataField.Boolean(DataFields.ControllerReadyStatus, 26),
-                    DataField.Boolean(DataFields.ToolReadyStatus, 29),
-                    DataField.Timestamp(DataFields.Time, 32)
-                }
-            },
-            {
-                2, new List<DataField>() { DataField.String(DataFields.AlarmText, 54, 50) }
-            }
-        };
-    }
-
-    // --- Field identity enum (private or protected, nested inside the class) ---
-    protected enum DataFields { ErrorCode, ControllerReadyStatus, ToolReadyStatus, Time, AlarmText }
+    // --- Override Pack() only when volatile field sizes must be set before packing ---
+    // --- Override ProcessDataFields() only when per-revision (non-additive) layout is used ---
 }
 ```
+
+**Attribute types:**
+| Attribute | Property Type | Default Padding | Notes |
+|---|---|---|---|
+| `[StringDataFieldDefinition]` | `string` | Space, right | Set `PaddingOrientation` for left |
+| `[Int32DataFieldDefinition]` | `int`, `enum` | Zero, left | Handles enum-backed int automatically |
+| `[Int64DataFieldDefinition]` | `long` | Zero, left | |
+| `[BooleanDataFieldDefinition]` | `bool` | Size=1 | |
+| `[TimestampDataFieldDefinition]` | `DateTime` | Size=19 | Format `yyyy-MM-dd:HH:mm:ss` |
+| `[DecimalDataFieldDefinition]` | `decimal` | Zero, left | |
+| `[TruncatedDecimalDataFieldDefinition]` | `decimal` | Zero, left | Set `DecimalPoints` |
+| `[VariableDataFieldCollectionDefinition]` | `List<VariableDataField>` | — | For variable-length PID lists |
 
 **Rules:**
 1. Class name: `Mid{NNNN}` with 4-digit zero-padded number.
 2. Three required constructors (parameterless, `(Header)`, `(int revision)`) — validated by `DefaultMidTests<T>`.
 3. `const int MID = N` must be present.
-4. `DataFields` enum is **nested and private/protected** — never a public top-level enum.
-5. `RegisterDatafields()` keys are **1-based revision numbers**.
-6. Index values in `RegisterDatafields()` are **absolute offsets** from position 0 of the full raw string (header occupies 0–19).
-7. Use `DataField` factory methods, not constructors.
-8. Property getters/setters delegate to `GetField` / `GetValue` / `SetValue` — no local parsing.
+4. One attribute per (property, revision) pair — duplicate attributes for multi-revision properties.
+5. `field: N` is the **1-based wire field number** (appears as prefix in the packed message).
+6. `Index` is the **absolute offset** from position 0 (header occupies 0–19).
+7. Use `HasPrefix = false` when the wire format has no field number prefix.
+8. Properties use **auto-properties** `{ get; set; }` — the attribute system handles binding.
 9. Apply the correct **category marker interface** (`IAlarm`, `ITightening`, etc.) and **role interface** (`IController` or `IIntegrator`).
 10. Apply **behavior interfaces** as per the spec: `IAcknowledgeable<TAck>`, `IAnswerableBy<TAnswer>`, `IAcceptableCommand`, `IDeclinableCommand`, `ISubscription`, `IUnsubscription`.
+
+**When to override:**
+- `Pack()` — when volatile field sizes must be computed from list contents before packing (e.g., `Mid0902`, `Mid0901`)
+- `ProcessDataFields()` — when revision layout is **replacement** (not additive), process only the active revision's fields
+- `ProcessDataField(DataField, ReadOnlySpan<char>)` — when a specific field needs dynamic size adjustment during parsing (e.g., volatile trailing sections)
+- `BuildHeader()` — when header length must sum only the active revision's fields (replacement layouts)
+- `RegisterDatafields()` — **only** when the attribute pattern cannot express the layout (e.g., `Mid0900` with interleaved volatile/fixed fields whose indices depend on parsed data)
 
 ---
 

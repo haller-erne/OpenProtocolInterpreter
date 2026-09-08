@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace OpenProtocolInterpreter.RexrothJob
 {
     /// <summary>
@@ -17,45 +15,19 @@ namespace OpenProtocolInterpreter.RexrothJob
         /// <summary>
         /// Job result number (3 digits, 000-999).
         /// </summary>
-        public int JobResultNumber
-        {
-            get => GetField(1, DataFields.JobResultNumber).GetValue(OpenProtocolConvert.ToInt32);
-            set => GetField(1, DataFields.JobResultNumber).SetValue(OpenProtocolConvert.ToString, value);
-        }
+        [Int32DataFieldDefinition(revision: 1, field: 1, Index = 20, Size = 3)]
+        public int JobResultNumber { get; set; }
 
         /// <summary>
         /// Job result value (single digit).
         /// </summary>
-        public int JobResultValue
-        {
-            get => GetField(1, DataFields.JobResultValue).GetValue(OpenProtocolConvert.ToInt32);
-            set => GetField(1, DataFields.JobResultValue).SetValue(OpenProtocolConvert.ToString, value);
-        }
+        [Int32DataFieldDefinition(revision: 1, field: 2, Index = 25, Size = 1)]
+        public int JobResultValue { get; set; }
 
         public Mid0555() : this(DEFAULT_REVISION) { }
 
         public Mid0555(Header header) : base(header) { }
 
         public Mid0555(int revision) : this(new Header() { Mid = MID, Revision = revision }) { }
-
-        protected override Dictionary<int, List<DataField>> RegisterDatafields()
-        {
-            return new Dictionary<int, List<DataField>>()
-            {
-                {
-                    1, new List<DataField>()
-                    {
-                        DataField.Number(DataFields.JobResultNumber, 20, 3),
-                        DataField.Number(DataFields.JobResultValue, 25, 1)
-                    }
-                }
-            };
-        }
-
-        protected enum DataFields
-        {
-            JobResultNumber = 1,
-            JobResultValue
-        }
     }
 }

@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace OpenProtocolInterpreter.Battery
 {
     /// <summary>
@@ -17,11 +15,8 @@ namespace OpenProtocolInterpreter.Battery
         /// <summary>
         /// Battery pack capacity in percent (000-100).
         /// </summary>
-        public int Capacity
-        {
-            get => GetField(1, DataFields.Capacity).GetValue(OpenProtocolConvert.ToInt32);
-            set => GetField(1, DataFields.Capacity).SetValue(OpenProtocolConvert.ToString, value);
-        }
+        [Int32DataFieldDefinition(revision: 1, field: 1, Index = 20, Size = 3)]
+        public int Capacity { get; set; }
 
         /// <summary>
         /// State of the battery pack:
@@ -32,36 +27,13 @@ namespace OpenProtocolInterpreter.Battery
         /// <para>4 = Battery reinserted (checking charge)</para>
         /// <para>5 = Battery warning level reached</para>
         /// </summary>
-        public int State
-        {
-            get => GetField(1, DataFields.State).GetValue(OpenProtocolConvert.ToInt32);
-            set => GetField(1, DataFields.State).SetValue(OpenProtocolConvert.ToString, value);
-        }
+        [Int32DataFieldDefinition(revision: 1, field: 2, Index = 25, Size = 1)]
+        public int State { get; set; }
 
         public Mid0801() : this(DEFAULT_REVISION) { }
 
         public Mid0801(Header header) : base(header) { }
 
         public Mid0801(int revision) : this(new Header() { Mid = MID, Revision = revision }) { }
-
-        protected override Dictionary<int, List<DataField>> RegisterDatafields()
-        {
-            return new Dictionary<int, List<DataField>>()
-            {
-                {
-                    1, new List<DataField>()
-                    {
-                        DataField.Number(DataFields.Capacity, 20, 3),
-                        DataField.Number(DataFields.State, 25, 1)
-                    }
-                }
-            };
-        }
-
-        protected enum DataFields
-        {
-            Capacity = 1,
-            State
-        }
     }
 }

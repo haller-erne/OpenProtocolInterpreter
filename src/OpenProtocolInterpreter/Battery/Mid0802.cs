@@ -24,34 +24,13 @@ namespace OpenProtocolInterpreter.Battery
         /// Change threshold in percent of maximum capacity (00-99).
         /// When the capacity changes by this amount, a notification is sent.
         /// </summary>
-        public int ChangeLevel
-        {
-            get => GetField(1, DataFields.ChangeLevel).GetValue(OpenProtocolConvert.ToInt32);
-            set => GetField(1, DataFields.ChangeLevel).SetValue(OpenProtocolConvert.ToString, value);
-        }
+        [Int32DataFieldDefinition(revision: 1, field: 1, Index = 20, Size = 2, HasPrefix = false)]
+        public int ChangeLevel { get; set; }
 
         public Mid0802() : this(DEFAULT_REVISION) { }
 
         public Mid0802(Header header) : base(header) { }
 
         public Mid0802(int revision) : this(new Header() { Mid = MID, Revision = revision }) { }
-
-        protected override Dictionary<int, List<DataField>> RegisterDatafields()
-        {
-            return new Dictionary<int, List<DataField>>()
-            {
-                {
-                    1, new List<DataField>()
-                    {
-                        DataField.Number(DataFields.ChangeLevel, 20, 2, false)
-                    }
-                }
-            };
-        }
-
-        protected enum DataFields
-        {
-            ChangeLevel
-        }
     }
 }
