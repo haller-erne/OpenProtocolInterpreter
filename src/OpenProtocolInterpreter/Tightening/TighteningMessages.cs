@@ -1,4 +1,4 @@
-﻿using OpenProtocolInterpreter.Messages;
+using OpenProtocolInterpreter.Messages;
 using System;
 using System.Collections.Generic;
 
@@ -21,6 +21,8 @@ namespace OpenProtocolInterpreter.Tightening
                 { Mid0065.MID, new CompiledInstance<Mid>(typeof(Mid0065)) },
                 { Mid0066.MID, new CompiledInstance<Mid>(typeof(Mid0066)) },
                 { Mid0067.MID, new CompiledInstance<Mid>(typeof(Mid0067)) },
+                { Mid0900.MID, new CompiledInstance<Mid>(typeof(Mid0900)) },
+                { Mid0901.MID, new CompiledInstance<Mid>(typeof(Mid0901)) },
                 { Mid0902.MID, new CompiledInstance<Mid>(typeof(Mid0902)) }
             };
 
@@ -48,3 +50,4 @@ namespace OpenProtocolInterpreter.Tightening
         public override bool IsAssignableTo(int mid) => (mid > 59 && mid < 68) || (mid > 899 && mid < 903);
     }
 }
+
