@@ -155,6 +155,59 @@ namespace OpenProtocolInterpreter.Tightening
                 YieldTooFewSamples = OpenProtocolConvert.GetBit(value[3], 8)
             };
         }
+
+        /// <summary>
+        /// Returns a human-readable list of the error bits that are set,
+        /// e.g. <c>"TighteningErrorStatus { TorqueMaxShutOff, ToolHot }"</c>.
+        /// When no bits are set, returns <c>"TighteningErrorStatus { }"</c>.
+        /// </summary>
+        public override string ToString()
+        {
+            var builder = new System.Text.StringBuilder(nameof(TighteningErrorStatus));
+            builder.Append(" { ");
+            AppendIfSet(builder, RundownAngleMaxShutOff, nameof(RundownAngleMaxShutOff));
+            AppendIfSet(builder, RundownAngleMinShutOff, nameof(RundownAngleMinShutOff));
+            AppendIfSet(builder, TorqueMaxShutOff, nameof(TorqueMaxShutOff));
+            AppendIfSet(builder, AngleMaxShutOff, nameof(AngleMaxShutOff));
+            AppendIfSet(builder, SelftapTorqueMaxShutOff, nameof(SelftapTorqueMaxShutOff));
+            AppendIfSet(builder, SelftapTorqueMinShutOff, nameof(SelftapTorqueMinShutOff));
+            AppendIfSet(builder, PrevailTorqueMaxShutOff, nameof(PrevailTorqueMaxShutOff));
+            AppendIfSet(builder, PrevailTorqueMinShutOff, nameof(PrevailTorqueMinShutOff));
+            AppendIfSet(builder, PrevailTorqueCompensateOverflow, nameof(PrevailTorqueCompensateOverflow));
+            AppendIfSet(builder, CurrentMonitoringMaxShutOff, nameof(CurrentMonitoringMaxShutOff));
+            AppendIfSet(builder, PostViewTorqueMinTorqueShutOff, nameof(PostViewTorqueMinTorqueShutOff));
+            AppendIfSet(builder, PostViewTorqueMaxTorqueShutOff, nameof(PostViewTorqueMaxTorqueShutOff));
+            AppendIfSet(builder, PostViewTorqueAngleTooSmall, nameof(PostViewTorqueAngleTooSmall));
+            AppendIfSet(builder, TriggerLost, nameof(TriggerLost));
+            AppendIfSet(builder, TorqueLessThanTarget, nameof(TorqueLessThanTarget));
+            AppendIfSet(builder, ToolHot, nameof(ToolHot));
+            AppendIfSet(builder, MultistageAbort, nameof(MultistageAbort));
+            AppendIfSet(builder, Rehit, nameof(Rehit));
+            AppendIfSet(builder, DsMeasureFailed, nameof(DsMeasureFailed));
+            AppendIfSet(builder, CurrentLimitReached, nameof(CurrentLimitReached));
+            AppendIfSet(builder, EndTimeOutShutOff, nameof(EndTimeOutShutOff));
+            AppendIfSet(builder, RemoveFastenerLimitExceeded, nameof(RemoveFastenerLimitExceeded));
+            AppendIfSet(builder, DisableDrive, nameof(DisableDrive));
+            AppendIfSet(builder, TransducerLost, nameof(TransducerLost));
+            AppendIfSet(builder, TransducerShorted, nameof(TransducerShorted));
+            AppendIfSet(builder, TransducerCorrupt, nameof(TransducerCorrupt));
+            AppendIfSet(builder, SyncTimeout, nameof(SyncTimeout));
+            AppendIfSet(builder, DynamicCurrentMonitoringMin, nameof(DynamicCurrentMonitoringMin));
+            AppendIfSet(builder, DynamicCurrentMonitoringMax, nameof(DynamicCurrentMonitoringMax));
+            AppendIfSet(builder, AngleMaxMonitor, nameof(AngleMaxMonitor));
+            AppendIfSet(builder, YieldNutOff, nameof(YieldNutOff));
+            AppendIfSet(builder, YieldTooFewSamples, nameof(YieldTooFewSamples));
+            if (builder[builder.Length - 2] == ',')
+                builder.Length -= 2;
+            builder.Append(" }");
+            return builder.ToString();
+        }
+
+        private static void AppendIfSet(System.Text.StringBuilder builder, bool value, string name)
+        {
+            if (value)
+                builder.Append(name).Append(", ");
+        }
     }
 
     public class TighteningErrorStatusDefinitionAttribute : DataFieldDefinitionAttribute
@@ -310,6 +363,45 @@ namespace OpenProtocolInterpreter.Tightening
             obj.Reserved[0] = OpenProtocolConvert.ToByte([OpenProtocolConvert.GetBit(value[2], 3), OpenProtocolConvert.GetBit(value[2], 4), false, false, false, false, false, false]);
 
             return obj;
+        }
+
+        /// <summary>
+        /// Returns a human-readable list of the error bits that are set,
+        /// e.g. <c>"TighteningErrorStatus2 { DriveHot, SnugMax }"</c>.
+        /// When no bits are set, returns <c>"TighteningErrorStatus2 { }"</c>.
+        /// </summary>
+        public override string ToString()
+        {
+            var builder = new System.Text.StringBuilder(nameof(TighteningErrorStatus2));
+            builder.Append(" { ");
+            AppendIfSet(builder, DriveDeactivated, nameof(DriveDeactivated));
+            AppendIfSet(builder, ToolStall, nameof(ToolStall));
+            AppendIfSet(builder, DriveHot, nameof(DriveHot));
+            AppendIfSet(builder, GradientMonitoringHigh, nameof(GradientMonitoringHigh));
+            AppendIfSet(builder, GradientMonitoringLow, nameof(GradientMonitoringLow));
+            AppendIfSet(builder, ReactionBarFailed, nameof(ReactionBarFailed));
+            AppendIfSet(builder, SnugMax, nameof(SnugMax));
+            AppendIfSet(builder, CycleAbort, nameof(CycleAbort));
+            AppendIfSet(builder, NeckingFailure, nameof(NeckingFailure));
+            AppendIfSet(builder, EffectiveLoosening, nameof(EffectiveLoosening));
+            AppendIfSet(builder, OverSpeed, nameof(OverSpeed));
+            AppendIfSet(builder, NoResidualTorque, nameof(NoResidualTorque));
+            AppendIfSet(builder, PositioningFail, nameof(PositioningFail));
+            AppendIfSet(builder, SnugMonLow, nameof(SnugMonLow));
+            AppendIfSet(builder, SnugMonHigh, nameof(SnugMonHigh));
+            AppendIfSet(builder, DynamicMinCurrent, nameof(DynamicMinCurrent));
+            AppendIfSet(builder, DynamicMaxCurrent, nameof(DynamicMaxCurrent));
+            AppendIfSet(builder, LatentResult, nameof(LatentResult));
+            if (builder[builder.Length - 2] == ',')
+                builder.Length -= 2;
+            builder.Append(" }");
+            return builder.ToString();
+        }
+
+        private static void AppendIfSet(System.Text.StringBuilder builder, bool value, string name)
+        {
+            if (value)
+                builder.Append(name).Append(", ");
         }
     }
 
